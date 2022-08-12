@@ -4,13 +4,16 @@ import "./index.css";
 import App from "./containers/pages/App";
 import reportWebVitals from "./reportWebVitals";
 import firebase from "./config/firebase";
+import { BrowserRouter } from "react-router-dom";
 
 console.log("firebase ==>", firebase);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );
 
