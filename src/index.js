@@ -5,15 +5,19 @@ import App from "./containers/pages/App";
 import reportWebVitals from "./reportWebVitals";
 import firebase from "./config/firebase";
 import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import { store } from "./config/redux";
 
 console.log("firebase ==>", firebase);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>
 );
 
