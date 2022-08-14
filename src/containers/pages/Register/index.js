@@ -1,8 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import "./Register.scss";
-// import { auth } from "../../../config/firebase";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import Button from "../../../components/atoms/Button";
+import { useDispatch, useSelector } from "react-redux";
+import { registerNewUser } from "../../../config/redux/action";
 
 function Register() {
   const [formRegister, setFormRegister] = useState({
@@ -17,6 +19,9 @@ function Register() {
     });
   };
 
+  const isLoading = useSelector((state) => state.isLoading);
+  const dispacth = useDispatch();
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -24,21 +29,9 @@ function Register() {
 
     const { email, password } = formRegister;
 
-    console.log("data before send", email, password);
+    const data = { auth, email, password };
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log("result", user);
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-        console.log(errorCode, errorMessage);
-      });
+    dispacth(registerNewUser(data));
   };
 
   return (
@@ -59,9 +52,7 @@ function Register() {
           onChange={handleChangeText}
           placeholder="Password"
         />
-        <button className="btn" type="submit">
-          Register
-        </button>
+        <Button title="Register" loading={isLoading} />
       </form>
       {/* <button>Go to Dashboard</button> */}
     </div>

@@ -7,11 +7,11 @@ import Dashboard from "../Dashboard";
 function App() {
   return (
     <div className="App">
-      {/* <nav>
-        <Link to="/">Home</Link>
-        <Link to="/login">Login</Link>
+      <nav>
+        <Link to="/">Home </Link>
+        <Link to="/login">Login </Link>
         <Link to="/register">register</Link>
-      </nav> */}
+      </nav>
 
       <Routes>
         <Route path="/" element={<Dashboard />} />

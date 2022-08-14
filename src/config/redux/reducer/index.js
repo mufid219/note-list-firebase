@@ -1,6 +1,8 @@
 const initialState = {
   isLogin: false,
+  isLoading: false,
   popUp: false,
+  user: "mufid",
 };
 
 const reducer = (state = initialState, action) => {
@@ -14,6 +16,16 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isLogin: action.value,
+      };
+    case "CHANGE_USER":
+      return {
+        ...state,
+        user: action.value,
+      };
+    case "CHANGE_LOADING":
+      return {
+        ...state,
+        isLoading: action.value,
       };
     default:
       return state;
