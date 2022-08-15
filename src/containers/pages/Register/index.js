@@ -22,7 +22,7 @@ function Register() {
   const isLoading = useSelector((state) => state.isLoading);
   const dispacth = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const auth = getAuth();
@@ -31,7 +31,16 @@ function Register() {
 
     const data = { auth, email, password };
 
-    dispacth(registerNewUser(data));
+    const dataRegister = await dispacth(registerNewUser(data)).catch(
+      (err) => err
+    );
+
+    if (dataRegister) {
+      setFormRegister({
+        email: "",
+        password: "",
+      });
+    }
   };
 
   return (
@@ -44,6 +53,7 @@ function Register() {
           id="email"
           onChange={handleChangeText}
           placeholder="Email"
+          value={formRegister.email}
         />
         <input
           className="input"
@@ -51,6 +61,7 @@ function Register() {
           id="password"
           onChange={handleChangeText}
           placeholder="Password"
+          value={formRegister.password}
         />
         <Button title="Register" loading={isLoading} />
       </form>
