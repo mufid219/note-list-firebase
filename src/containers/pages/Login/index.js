@@ -30,10 +30,10 @@ function Login() {
     const { email, password } = formLogin;
     const data = { auth, email, password };
 
-    const dataLogin = await dispacth(loginUser(data)).catch((err) => err);
+    const res = await dispacth(loginUser(data)).catch((err) => err);
 
-    if (dataLogin) {
-      console.log("login success");
+    if (res) {
+      localStorage.setItem("dataUser", JSON.stringify(res));
       navigate("/");
       return setFormLogin({
         email: "",

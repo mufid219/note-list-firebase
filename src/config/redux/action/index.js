@@ -2,6 +2,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { onValue, push, ref } from "firebase/database";
+import { database } from "../../firebase";
 
 export const actionChangeUsername = () => (dispacth) => {
   setTimeout(() => {
@@ -44,6 +46,7 @@ export const loginUser = (data) => (dispacth) => {
           email: user.email,
           uid: user.uid,
           emailVerified: user.emailVerified,
+          refreshToken: user.stsTokenManager.refreshToken,
         };
         console.log(dataUser);
         dispacth({ type: "CHANGE_LOADING", value: false });
@@ -51,7 +54,7 @@ export const loginUser = (data) => (dispacth) => {
         dispacth({ type: "CHANGE_USER", value: dataUser });
 
         console.log("success", user);
-        resolve(true);
+        resolve(dataUser);
         // ...
       })
       .catch((error) => {
@@ -63,5 +66,31 @@ export const loginUser = (data) => (dispacth) => {
         console.log(errorCode, errorMessage);
         reject(false);
       });
+  });
+};
+
+export const addDataToAPI = (data) => (dispacth) => {
+  push(ref(database, "notes/" + data.userId), {
+    title: data.title,
+    date: data.date,
+    content: data.content,
+  });
+};
+
+export const getDataFromAPI = (userId) => (dispacth) => {
+  return new Promise((resolve, reject) => {
+    const starCountRef = ref(database, "notes/" + userId);
+    onValue(starCountRef, (snapshot) => {
+      const data = [];
+      Object.keys(snapshot.val()).map((key) => {
+        data.push({
+          id: key,
+          data: snapshot.val()[key],
+        });
+      });
+      dispacth({ type: "CHANGE_NOTES", value: data });
+      console.log(data);
+      resolve(data);
+    });
   });
 };
