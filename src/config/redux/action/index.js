@@ -2,7 +2,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { onValue, push, ref, set } from "firebase/database";
+import { onValue, push, ref, remove, set } from "firebase/database";
 import { database } from "../../firebase";
 
 export const actionChangeUsername = () => (dispacth) => {
@@ -109,5 +109,12 @@ export const updateDataAPI = (data) => (dispacth) => {
         console.log(err);
         reject(false);
       });
+  });
+};
+
+export const deleteDataAPI = (data) => (dispacth) => {
+  console.log("remove", data);
+  return new Promise((resolve, reject) => {
+    remove(ref(database, `notes/${data.userId}/${data.noteId}`));
   });
 };

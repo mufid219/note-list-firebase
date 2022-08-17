@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addDataToAPI,
+  deleteDataAPI,
   getDataFromAPI,
   updateDataAPI,
 } from "../../../config/redux/action";
@@ -68,6 +69,17 @@ function Dashboard() {
     });
   };
 
+  const handleDelete = (e, note) => {
+    e.stopPropagation();
+    const dataUser = JSON.parse(localStorage.getItem("dataUser"));
+    const data = {
+      userId: dataUser.uid,
+      noteId: note.id,
+    };
+    console.log(data);
+    dispacth(deleteDataAPI(data));
+  };
+
   // console.log("data notes redux:", state.notes);
 
   return (
@@ -117,6 +129,12 @@ function Dashboard() {
                 <p className="title">{note.data.title}</p>
                 <p className="date">{note.data.date}</p>
                 <p className="content">{note.data.content}</p>
+                <div
+                  className="delete-btn"
+                  onClick={(e) => handleDelete(e, note)}
+                >
+                  X
+                </div>
               </div>
             );
           })}
