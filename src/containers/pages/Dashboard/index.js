@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addDataToAPI, getDataFromAPI } from "../../../config/redux/action";
+import {
+  addDataToAPI,
+  getDataFromAPI,
+  updateDataAPI,
+} from "../../../config/redux/action";
 import "./Dashboard.scss";
 
 function Dashboard() {
@@ -8,6 +12,8 @@ function Dashboard() {
     title: "",
     content: "",
     date: "",
+    textButton: "SIMPAN",
+    noteId: "",
   });
 
   const dispacth = useDispatch();
@@ -15,7 +21,7 @@ function Dashboard() {
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("dataUser"));
-    console.log(data);
+    // console.log(data);
     dispacth(getDataFromAPI(data.uid));
   }, []);
 
@@ -35,10 +41,34 @@ function Dashboard() {
       userId: dataUser.uid,
     };
 
-    dispacth(addDataToAPI(data));
+    if (formInput.textButton === "SIMPAN") {
+      dispacth(addDataToAPI(data));
+      handleCancel();
+    } else {
+      data.noteId = formInput.noteId;
+      dispacth(updateDataAPI(data));
+    }
   };
 
-  console.log("data notes redux:", state.notes);
+  const handleUpdate = (note) => {
+    // console.log(note);
+    setFormInput({
+      title: note.data.title,
+      content: note.data.content,
+      textButton: "UPDATE",
+      noteId: note.id,
+    });
+  };
+
+  const handleCancel = () => {
+    setFormInput({
+      title: "",
+      content: "",
+      textButton: "SIMPAN",
+    });
+  };
+
+  // console.log("data notes redux:", state.notes);
 
   return (
     <div className="container">
@@ -60,9 +90,18 @@ function Dashboard() {
             handleInput(e, "content");
           }}
         ></textarea>
-        <button className="save-btn" onClick={handleSubmit}>
-          Simpan
-        </button>
+        <div className="button-wrapper">
+          {formInput.textButton === "UPDATE" ? (
+            <button className="save-btn cancel" onClick={handleCancel}>
+              CANCEL
+            </button>
+          ) : (
+            <div />
+          )}
+          <button className="save-btn" onClick={handleSubmit}>
+            {formInput.textButton}
+          </button>
+        </div>
       </div>
       <hr />
 
@@ -70,7 +109,11 @@ function Dashboard() {
         <>
           {state.notes.map((note) => {
             return (
-              <div className="card-content" key={note.id}>
+              <div
+                className="card-content"
+                key={note.id}
+                onClick={() => handleUpdate(note)}
+              >
                 <p className="title">{note.data.title}</p>
                 <p className="date">{note.data.date}</p>
                 <p className="content">{note.data.content}</p>

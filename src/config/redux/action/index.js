@@ -2,7 +2,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { onValue, push, ref } from "firebase/database";
+import { onValue, push, ref, set } from "firebase/database";
 import { database } from "../../firebase";
 
 export const actionChangeUsername = () => (dispacth) => {
@@ -92,5 +92,22 @@ export const getDataFromAPI = (userId) => (dispacth) => {
       console.log(data);
       resolve(data);
     });
+  });
+};
+
+export const updateDataAPI = (data) => (dispacth) => {
+  return new Promise((resolve, reject) => {
+    set(ref(database, `notes/${data.userId}/${data.noteId}`), {
+      title: data.title,
+      date: data.date,
+      content: data.content,
+    })
+      .then(() => {
+        resolve(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        reject(false);
+      });
   });
 };
